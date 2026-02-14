@@ -20,18 +20,33 @@ const btnNext = document.getElementById("btnNext");
 const pageIndicator = document.getElementById("pageIndicator");
 const pageSize = document.getElementById("pageSize");
 
-// Form
+const btnAddNew = document.getElementById("btnAddNew");
+
+const formWrap = document.getElementById("formWrap");
 const dataForm = document.getElementById("dataForm");
+const btnCancel = document.getElementById("btnCancel");
 const fieldName = document.getElementById("fieldName");
 const fieldEmail = document.getElementById("fieldEmail");
 const fieldSpec = document.getElementById("fieldSpec");
 const fieldOffice = document.getElementById("fieldOffice");
 
 if (pageSize) {
+	state.limit = Number(pageSize.value) || 5;
 	pageSize.addEventListener("change", function () {
-		state.limit = Number(pageSize.value);
+		const newLimit = Number(this.value);
+		if (!newLimit || newLimit <= 0) return;
+		state.limit = newLimit;
 		state.page = 1;
 		loadData();
+	});
+}
+
+if (btnAddNew) {
+	btnAddNew.addEventListener("click", function () {
+		state.editingId = null;
+		dataForm.reset();
+		formWrap.style.display = "block";
+		fieldName.focus();
 	});
 }
 
@@ -40,6 +55,14 @@ if (searchInput) {
 		state.q = searchInput.value;
 		state.page = 1;
 		loadData();
+	});
+}
+
+if (btnCancel) {
+	btnCancel.addEventListener("click", function () {
+		dataForm.reset();
+		state.editingId = null;
+		formWrap.style.display = "none";
 	});
 }
 
@@ -69,28 +92,40 @@ if (btnNext) {
 }
 
 async function loadData() {
-	const query =
-		`?_page=${state.page}` +
-		`&_limit=${state.limit}` +
-		`&q=${encodeURIComponent(state.q)}` +
-		(state.sort ? `&_sort=${state.sort}&_order=${state.order}` : "");
+	const q = state.q.trim().toLowerCase();
 
-	const result = await getList("instructors", query);
-	state.totalCount = result.totalCount;
+	const result = await getList("instructors", "");
+	const all = result.data;
+	let filtered = all;
+	if (q) {
+		filtered = all.filter(function (ins) {
+			return (
+				String(ins.name || "").toLowerCase().startsWith(q) ||
+				String(ins.email || "").toLowerCase().startsWith(q) ||
+				String(ins.specialization || "").toLowerCase().startsWith(q) ||
+				String(ins.office || "").toLowerCase().startsWith(q)
+			);
+		});
+	}
 
-	renderTable(tableBody, result.data, [
+	state.totalCount = filtered.length;
+	const start = (state.page - 1) * state.limit;
+	const end = start + state.limit;
+	const pageData = filtered.slice(start, end);
+
+
+	renderTable(tableBody, pageData, [
 		"id",
 		"name",
-		"email",
 		"specialization",
+		"email",
 		"office"
 	]);
-
 	updatePaginationUI(pageIndicator, btnPrev, btnNext, state);
 }
 
-if (dataForm) {
-	dataForm.addEventListener("submit", async function (e) {
+if (formWrap) {
+	formWrap.addEventListener("submit", async function (e) {
 		e.preventDefault();
 
 		const instructor = new Instructor(
@@ -104,13 +139,21 @@ if (dataForm) {
 		if (error) return alert(error);
 
 		if (state.editingId === null) {
-			await create("instructors", instructor.toJSON());
+			const result = await getList("instructors", "");
+			const lastInstructor = result.data[result.data.length - 1];
+			const nextId = lastInstructor ? Number(lastInstructor.id) + 1 : 1;
+			const newInstructor = {
+				id: nextId,
+				...instructor.toJSON()
+			};
+			await create("instructors", newInstructor);
 		} else {
 			await update("instructors", state.editingId, instructor.toJSON());
 			state.editingId = null;
 		}
 
 		dataForm.reset();
+		formWrap.style.display = "none";
 		loadData();
 	});
 }
@@ -123,12 +166,15 @@ if (tableBody) {
 
 		if (btn.classList.contains("edit-btn")) {
 			const ins = await getById("instructors", id);
-
 			state.editingId = Number(id);
+
 			fieldName.value = ins.name ?? "";
 			fieldEmail.value = ins.email ?? "";
 			fieldSpec.value = ins.specialization ?? "";
 			fieldOffice.value = ins.office ?? "";
+
+			formWrap.style.display = "block";
+			fieldName.focus();
 		}
 
 		if (btn.classList.contains("delete-btn")) {
@@ -136,11 +182,9 @@ if (tableBody) {
 			if (!ok) return;
 
 			await remove("instructors", id);
-
 			if (state.page > 1 && (state.totalCount - 1) <= (state.page - 1) * state.limit) {
 				state.page--;
 			}
-
 			loadData();
 		}
 	});
