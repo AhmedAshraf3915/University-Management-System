@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>Students</title>
+	<link rel="stylesheet" href="css/pages.css" />
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="topbar">
+			<a href="index.html">← Back to Home</a>
+			<span>Students</span>
+		</div>
+
+		<h1>Students Management</h1>
+		<p class="page-subtitle">Add, edit, delete, search, sort, and paginate students.</p>
+
+		<div class="toolbar">
+			<select id="pageSize">
+				<option value="5">5</option>
+				<option value="10">10</option>
+				<option value="20">20</option>
+				<!-- <option value="50">50</option> -->
+			</select>
+			<span>entries per page</span>
+			<button id="btnAddNew" type="button">Add New</button>
+			<input id="searchInput" type="search" placeholder="Search students..." />
+			<button id="btnClear" type="button">Clear</button>
+		</div>
+
+		<div class="table-wrap">
+			<table id="dataTable">
+				<thead>
+					<tr>
+						<th data-sort="id">ID</th>
+						<th data-sort="fullName">Full Name</th>
+						<th data-sort="email">Email</th>
+						<th data-sort="phone">Phone</th>
+						<th data-sort="gender">Gender</th>
+						<th data-sort="dob">Date of Birth</th>
+						<th data-sort="department">Department</th>
+						<th data-sort="level">Level</th>
+						<th data-sort="gpa">GPA</th>
+						<th colspan="2">Actions</th>
+					</tr>
+				</thead>
+				<tbody id="tableBody"></tbody>
+			</table>
+		</div>
+
+		<div class="form-wrap" id="formWrap">
+			<h2 id="formTitle">Add New Student</h2>
+
+			<form id="dataForm">
+				<div class="form-grid">
+					<div>
+						<label>Full Name</label>
+						<input id="fieldFullName" type="text" />
+					</div>
+
+					<div>
+						<label>Email</label>
+						<input id="fieldEmail" type="email" />
+					</div>
+
+					<div>
+						<label>Phone</label>
+						<input id="fieldPhone" type="text" />
+					</div>
+
+					<div>
+						<label>Gender</label>
+						<select id="fieldGender">
+							<option value="">Select</option>
+							<option value="Male">Male</option>
+							<option value="Female">Female</option>
+						</select>
+					</div>
+
+					<div>
+						<label>Date of Birth</label>
+						<input id="fieldDob" type="date" />
+					</div>
+
+					<div>
+						<label>Department</label>
+						<input id="fieldDept" type="text" />
+					</div>
+
+					<div>
+						<label>Level</label>
+						<input id="fieldLevel" type="number" min="1" max="8" />
+					</div>
+
+					<div>
+						<label>GPA</label>
+						<input id="fieldGpa" type="number" step="0.01" min="0" max="4" />
+					</div>
+				</div>
+
+				<div class="form-actions">
+					<button class="btn-save" id="btnSave" type="submit">Save</button>
+					<button class="btn-cancel" id="btnCancel" type="button">Cancel</button>
+				</div>
+
+				<p id="errorBox"></p>
+			</form>
+		</div>
+
+		<div class="pagination">
+			<button id="btnPrev" type="button">Previous</button>
+			<span id="pageIndicator">Page 1</span>
+			<button id="btnNext" type="button">Next</button>
+		</div>
+
+	</div>
+
+	<script src="js/students.js" type="module"></script>
+</body>
+
+</html>

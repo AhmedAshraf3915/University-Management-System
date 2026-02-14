@@ -1,0 +1,70 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: #333;
+}
+
+/* Main Page CSS */
+
+.container {
+  width: 80%;
+  max-width: 800px;
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.welcome h1 {
+  margin-bottom: 15px;
+  font-size: 28px;
+  color: #1e3c72;
+}
+
+.welcome p {
+  margin-bottom: 30px;
+  font-size: 16px;
+  color: #555;
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.nav-bar a {
+  flex: 1;
+  text-decoration: none;
+  padding: 15px 10px;
+  background-color: #2a5298;
+  color: white;
+  border-radius: 8px;
+  transition: 0.3s;
+  font-weight: bold;
+}
+
+.nav-bar a:hover {
+  background-color: #1e3c72;
+  transform: translateY(-3px);
+}
+
+.footer {
+  font-size: 14px;
+  color: #777;
+}
+
+

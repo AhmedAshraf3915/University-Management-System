@@ -1,0 +1,385 @@
+/* ===== Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #f5f7fb;
+  color: #222;
+}
+
+.container {
+  width: 90%;
+  max-width: 1100px;
+  margin: 30px auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== Top bar ===== */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.topbar a {
+  text-decoration: none;
+  color: #2a5298;
+  font-weight: bold;
+}
+
+.topbar a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Title ===== */
+h1 {
+  font-size: 26px;
+  color: #1e3c72;
+  margin-bottom: 5px;
+}
+
+.page-subtitle {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* ===== Toolbar ===== */
+.toolbar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.toolbar button {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #2a5298;
+  color: #fff;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.toolbar button:hover {
+  background: #1e3c72;
+}
+
+.toolbar input {
+  flex: 1;
+  min-width: 220px;
+  padding: 10px 12px;
+  border: 1px solid #ccd6e0;
+  border-radius: 8px;
+  outline: none;
+}
+
+.toolbar input:focus {
+  border-color: #2a5298;
+}
+
+/* ===== Table ===== */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid #e6eaf0;
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  text-align: left;
+  background: #f0f4ff;
+  color: #1e3c72;
+  padding: 12px;
+  border-bottom: 1px solid #e6eaf0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #eef2f7;
+  white-space: nowrap;
+}
+
+tbody tr:hover {
+  background: #fafcff;
+}
+
+/* Actions buttons inside table */
+.action-btn {
+  border: none;
+  padding: 7px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-edit {
+  background: #ffd166;
+}
+
+.btn-delete {
+  background: #ef476f;
+  color: #fff;
+}
+
+/* ===== Form ===== */
+.form-wrap {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid #e6eaf0;
+  border-radius: 10px;
+  background: #fbfcff;
+  display: none; /* JS will toggle it */
+}
+
+.form-wrap h2 {
+  margin-bottom: 12px;
+  color: #1e3c72;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-grid label {
+  font-size: 14px;
+  color: #444;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.form-grid input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccd6e0;
+  border-radius: 8px;
+  outline: none;
+}
+
+.form-grid input:focus {
+  border-color: #2a5298;
+}
+
+.form-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+}
+
+.form-actions button {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-save {
+  background: #06d6a0;
+  color: #fff;
+}
+
+.btn-cancel {
+  background: #adb5bd;
+  color: #fff;
+}
+
+#errorBox {
+  margin-top: 10px;
+  color: #c1121f;
+  display: none;
+  font-weight: bold;
+}
+
+/* ===== Pagination ===== */
+.pagination {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pagination button {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #2a5298;
+  color: #fff;
+  font-weight: bold;
+}
+
+.pagination button:disabled {
+  background: #9bb0d6;
+  cursor: not-allowed;
+}
+
+#pageIndicator {
+  font-weight: bold;
+  color: #1e3c72;
+}
+
+#pageSize {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 70px;
+  height: 42px;
+  padding: 0 36px 0 12px;
+  border: 1px solid #cfd8ea;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #0f2a4f;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 2px 10px rgba(15, 42, 79, 0.06);
+
+  background-image:
+    linear-gradient(45deg, transparent 50%, #0f2a4f 50%),
+    linear-gradient(135deg, #0f2a4f 50%, transparent 50%),
+    linear-gradient(to right, transparent, transparent);
+  background-position:
+    calc(100% - 18px) 17px,
+    calc(100% - 12px) 17px,
+    0 0;
+  background-size:
+    6px 6px,
+    6px 6px,
+    100% 100%;
+  background-repeat: no-repeat;
+}
+
+#pageSize:focus {
+  border-color: #2b5fc7;
+  box-shadow: 0 0 0 4px rgba(43, 95, 199, 0.15);
+}
+
+#pageSize:hover {
+  border-color: #9fb4dd;
+}
+
+#pageSize option {
+  font-weight: 600;
+}
+
+.edit-btn,
+.delete-btn {
+  display: inline-block;
+  min-width: 74px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.05s ease,
+    opacity 0.15s ease,
+    background 0.15s ease;
+}
+
+.edit-btn:active,
+.delete-btn:active {
+  transform: scale(0.98);
+}
+
+.edit-btn:disabled,
+.delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.edit-btn {
+  background: #eef4ff;
+  color: #1f4fbf;
+  border-color: #cfe0ff;
+}
+
+.edit-btn:hover {
+  background: #e3eeff;
+}
+
+.delete-btn {
+  background: #fff0f0;
+  color: #b42318;
+  border-color: #ffd2d2;
+}
+
+.delete-btn:hover {
+  background: #ffe6e6;
+}
+
+#fieldGender {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 100%;
+  height: 44px;
+  padding: 0 40px 0 14px;
+  border: 1px solid #cfd8ea;
+  border-radius: 10px;
+  background-color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2f4a;
+
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  background-image:
+    linear-gradient(45deg, transparent 50%, #1f4fbf 50%),
+    linear-gradient(135deg, #1f4fbf 50%, transparent 50%),
+    linear-gradient(to right, transparent, transparent);
+  background-position:
+    calc(100% - 20px) 18px,
+    calc(100% - 14px) 18px,
+    0 0;
+  background-size:
+    6px 6px,
+    6px 6px,
+    100% 100%;
+  background-repeat: no-repeat;
+}
+
+#fieldGender:hover {
+  border-color: #9fb4dd;
+}
+
+#fieldGender:focus {
+  border-color: #2b5fc7;
+  box-shadow: 0 0 0 4px rgba(43, 95, 199, 0.15);
+}
+
+#fieldGender:disabled {
+  background-color: #f5f7fa;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+#fieldGender option {
+  font-weight: 600;
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>Employees</title>
+	<link rel="stylesheet" href="css/pages.css" />
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="topbar">
+			<a href="index.html">← Back to Home</a>
+			<span>Employees</span>
+		</div>
+
+		<h1>Employees Management</h1>
+		<p class="page-subtitle">Add, edit, delete, search, sort, and paginate employees.</p>
+
+		<div class="toolbar">
+			<select id="pageSize">
+				<option value="5">5</option>
+				<option value="10">10</option>
+				<option value="20">20</option>
+			</select>
+			<span>entries per page</span>
+			<button id="btnAddNew" type="button">Add New</button>
+			<input id="searchInput" type="search" placeholder="Search employees..." />
+			<button id="btnClear" type="button">Clear</button>
+		</div>
+
+		<div class="table-wrap">
+			<table id="dataTable">
+				<thead>
+					<tr>
+						<th data-sort="id">ID</th>
+						<th data-sort="name">Name</th>
+						<th data-sort="position">Position</th>
+						<th data-sort="salary">Salary</th>
+						<th colspan="2">Actions</th>
+					</tr>
+				</thead>
+				<tbody id="tableBody"></tbody>
+			</table>
+		</div>
+
+		<div class="form-wrap" id="formWrap">
+			<h2 id="formTitle">Add New Employee</h2>
+
+			<form id="dataForm">
+				<div class="form-grid">
+					<div>
+						<label>Name</label>
+						<input id="fieldName" type="text" />
+					</div>
+
+					<div>
+						<label>Position</label>
+						<input id="fieldPosition" type="text" />
+					</div>
+
+					<div>
+						<label>Salary</label>
+						<input id="fieldSalary" type="number" />
+					</div>
+
+					<div>
+						<label>Phone</label>
+						<input id="fieldPhone" type="text" />
+					</div>
+				</div>
+
+				<div class="form-actions">
+					<button class="btn-save" id="btnSave" type="submit">Save</button>
+					<button class="btn-cancel" id="btnCancel" type="button">Cancel</button>
+				</div>
+
+				<p id="errorBox"></p>
+			</form>
+		</div>
+
+		<div class="pagination">
+			<button id="btnPrev" type="button">Previous</button>
+			<span id="pageIndicator">Page 1</span>
+			<button id="btnNext" type="button">Next</button>
+		</div>
+
+	</div>
+	<script src="js/employees.js" type="module"></script>
+</body>
+
+</html>

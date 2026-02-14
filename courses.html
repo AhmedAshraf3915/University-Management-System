@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>Courses</title>
+	<link rel="stylesheet" href="css/pages.css" />
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="topbar">
+			<a href="index.html">← Back to Home</a>
+			<span>Courses</span>
+		</div>
+
+		<h1>Courses Management</h1>
+		<p class="page-subtitle">Add, edit, delete, search, sort, and paginate courses.</p>
+
+		<div class="toolbar">
+			<select id="pageSize">
+				<option value="5">5</option>
+				<option value="10">10</option>
+				<option value="20">20</option>
+			</select>
+			<span>entries per page</span>
+			<button id="btnAddNew" type="button">Add New</button>
+			<input id="searchInput" type="search" placeholder="Search courses..." />
+			<button id="btnClear" type="button">Clear</button>
+		</div>
+
+		<div class="table-wrap">
+			<table id="dataTable">
+				<thead>
+					<tr>
+						<th data-sort="id">ID</th>
+						<th data-sort="title">Title</th>
+						<th data-sort="hours">Hours</th>
+						<th data-sort="department-id">Department-ID</th>
+						<th data-sort="department">Department</th>
+						<th colspan="2">Actions</th>
+					</tr>
+				</thead>
+				<tbody id="tableBody"></tbody>
+			</table>
+		</div>
+
+		<div class="form-wrap" id="formWrap">
+			<h2 id="formTitle">Add New Course</h2>
+
+			<form id="dataForm">
+				<div class="form-grid">
+					<div>
+						<label>Title</label>
+						<input id="fieldTitle" type="text" />
+					</div>
+
+					<div>
+						<label>Hours</label>
+						<input id="fieldHours" type="number" />
+					</div>
+
+					<div>
+						<label>Department</label>
+						<input id="fieldDept" type="text" />
+					</div>
+
+					<div>
+						<label>Code</label>
+						<input id="fieldCode" type="text" />
+					</div>
+				</div>
+
+				<div class="form-actions">
+					<button class="btn-save" id="btnSave" type="submit">Save</button>
+					<button class="btn-cancel" id="btnCancel" type="button">Cancel</button>
+				</div>
+
+				<p id="errorBox"></p>
+			</form>
+		</div>
+
+		<div class="pagination">
+			<button id="btnPrev" type="button">Previous</button>
+			<span id="pageIndicator">Page 1</span>
+			<button id="btnNext" type="button">Next</button>
+		</div>
+
+	</div>
+	<script src="js/courses.js" type="module"></script>
+</body>
+
+</html>
