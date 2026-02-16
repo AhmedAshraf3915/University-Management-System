@@ -8,7 +8,7 @@ let state = {
 	q: "",
 	sort: "",
 	order: "asc",
-	editingId: null,
+	editingId: null, // keep as string or null
 	totalCount: 0
 };
 
@@ -29,6 +29,9 @@ const fieldName = document.getElementById("fieldName");
 const fieldEmail = document.getElementById("fieldEmail");
 const fieldSpec = document.getElementById("fieldSpec");
 const fieldOffice = document.getElementById("fieldOffice");
+
+const ENDPOINT = "employees";
+const INSTRUCTOR_ROLE = "Instructor";
 
 if (pageSize) {
 	state.limit = Number(pageSize.value) || 5;
@@ -94,11 +97,18 @@ if (btnNext) {
 async function loadData() {
 	const q = state.q.trim().toLowerCase();
 
-	const result = await getList("instructors", "");
-	const all = result.data;
-	let filtered = all;
+	const result = await getList(ENDPOINT, "");
+	const allEmployees = result.data || [];
+
+	// take only instructors
+	const instructorsOnly = allEmployees.filter(function (emp) {
+		return String(emp.role || "").toLowerCase() === INSTRUCTOR_ROLE.toLowerCase();
+	});
+
+	let filtered = instructorsOnly;
+
 	if (q) {
-		filtered = all.filter(function (ins) {
+		filtered = instructorsOnly.filter(function (ins) {
 			return (
 				String(ins.name || "").toLowerCase().startsWith(q) ||
 				String(ins.email || "").toLowerCase().startsWith(q) ||
@@ -109,18 +119,12 @@ async function loadData() {
 	}
 
 	state.totalCount = filtered.length;
+
 	const start = (state.page - 1) * state.limit;
 	const end = start + state.limit;
 	const pageData = filtered.slice(start, end);
 
-
-	renderTable(tableBody, pageData, [
-		"id",
-		"name",
-		"specialization",
-		"email",
-		"office"
-	]);
+	renderTable(tableBody, pageData, ["id", "name", "specialization", "email", "office"]);
 	updatePaginationUI(pageIndicator, btnPrev, btnNext, state);
 }
 
@@ -139,16 +143,36 @@ if (formWrap) {
 		if (error) return alert(error);
 
 		if (state.editingId === null) {
-			const result = await getList("instructors", "");
-			const lastInstructor = result.data[result.data.length - 1];
-			const nextId = lastInstructor ? Number(lastInstructor.id) + 1 : 1;
-			const newInstructor = {
+			// generate next id based on MAX id in employees (string-safe)
+			const result = await getList(ENDPOINT, "");
+			const allEmployees = result.data || [];
+
+			let maxId = 0;
+			for (let i = 0; i < allEmployees.length; i++) {
+				const n = Number(allEmployees[i].id);
+				if (!isNaN(n) && n > maxId) maxId = n;
+			}
+
+			const nextId = String(maxId + 1);
+
+			const newEmployee = {
 				id: nextId,
+				role: INSTRUCTOR_ROLE,
+				department: "Computer Science", // optional default (change if you want)
+				salary: 12000, // optional default
+				phone: "", // optional
 				...instructor.toJSON()
 			};
-			await create("instructors", newInstructor);
+
+			await create(ENDPOINT, newEmployee);
 		} else {
-			await update("instructors", state.editingId, instructor.toJSON());
+			// keep role instructor when updating
+			const updated = {
+				role: INSTRUCTOR_ROLE,
+				...instructor.toJSON()
+			};
+
+			await update(ENDPOINT, String(state.editingId), updated);
 			state.editingId = null;
 		}
 
@@ -161,17 +185,21 @@ if (formWrap) {
 if (tableBody) {
 	tableBody.addEventListener("click", async function (e) {
 		const btn = e.target;
-		const id = btn.dataset.id;
+		const id = btn && btn.dataset ? btn.dataset.id : null;
 		if (!id) return;
 
 		if (btn.classList.contains("edit-btn")) {
-			const ins = await getById("instructors", id);
-			state.editingId = Number(id);
+			const emp = await getById(ENDPOINT, id);
+			if (String(emp.role || "").toLowerCase() !== INSTRUCTOR_ROLE.toLowerCase()) {
+				return alert("This employee is not an instructor.");
+			}
 
-			fieldName.value = ins.name ?? "";
-			fieldEmail.value = ins.email ?? "";
-			fieldSpec.value = ins.specialization ?? "";
-			fieldOffice.value = ins.office ?? "";
+			state.editingId = String(id);
+
+			fieldName.value = emp.name ?? "";
+			fieldEmail.value = emp.email ?? "";
+			fieldSpec.value = emp.specialization ?? "";
+			fieldOffice.value = emp.office ?? "";
 
 			formWrap.style.display = "block";
 			fieldName.focus();
@@ -180,8 +208,7 @@ if (tableBody) {
 		if (btn.classList.contains("delete-btn")) {
 			const ok = confirm("Delete this instructor?");
 			if (!ok) return;
-
-			await remove("instructors", id);
+			await remove(ENDPOINT, id);
 			if (state.page > 1 && (state.totalCount - 1) <= (state.page - 1) * state.limit) {
 				state.page--;
 			}
@@ -189,5 +216,4 @@ if (tableBody) {
 		}
 	});
 }
-
 loadData();

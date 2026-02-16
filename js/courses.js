@@ -1,13 +1,11 @@
 import { getList, create, update, remove, getById } from "./api.js";
 import Course from "./models/Course.js";
-import { renderTable, updatePaginationUI } from "./ui.js";
+import { renderTable } from "./ui.js";
 
 let state = {
 	page: 1,
 	limit: 5,
 	q: "",
-	sort: "",
-	order: "asc",
 	editingId: null,
 	totalCount: 0
 };
@@ -19,10 +17,12 @@ const btnPrev = document.getElementById("btnPrev");
 const btnNext = document.getElementById("btnNext");
 const pageIndicator = document.getElementById("pageIndicator");
 const pageSize = document.getElementById("pageSize");
+
 const dataForm = document.getElementById("dataForm");
 const btnAddNew = document.getElementById("btnAddNew");
 const formWrap = document.getElementById("formWrap");
 const btnCancel = document.getElementById("btnCancel");
+
 const fieldTitle = document.getElementById("fieldTitle");
 const fieldHours = document.getElementById("fieldHours");
 const fieldDept = document.getElementById("fieldDept");
@@ -38,14 +38,16 @@ if (pageSize) {
 		loadData();
 	});
 }
+
 if (btnAddNew) {
 	btnAddNew.addEventListener("click", function () {
 		state.editingId = null;
 		dataForm.reset();
 		formWrap.style.display = "block";
-		fieldFullName.focus();
+		fieldTitle.focus();
 	});
 }
+
 if (searchInput) {
 	searchInput.addEventListener("input", function () {
 		state.q = searchInput.value;
@@ -53,13 +55,15 @@ if (searchInput) {
 		loadData();
 	});
 }
+
 if (btnCancel) {
 	btnCancel.addEventListener("click", function () {
-		formWrap.reset();
+		dataForm.reset();
 		state.editingId = null;
 		formWrap.style.display = "none";
 	});
 }
+
 if (btnClear) {
 	btnClear.addEventListener("click", function () {
 		searchInput.value = "";
@@ -88,7 +92,7 @@ if (btnNext) {
 async function loadData() {
 	const q = state.q.trim().toLowerCase();
 	const result = await getList("courses", "");
-	const all = result.data;
+	const all = result.data || [];
 
 	let filtered = all;
 
@@ -101,19 +105,14 @@ async function loadData() {
 			);
 		});
 	}
+
 	state.totalCount = filtered.length;
 
 	const start = (state.page - 1) * state.limit;
 	const end = start + state.limit;
 	const pageData = filtered.slice(start, end);
 
-	renderTable(tableBody, pageData, [
-		"id",
-		"title",
-		"hours",
-		"department",
-		"code"
-	]);
+	renderTable(tableBody, pageData, ["id", "title", "hours", "department", "code"]);
 
 	pageIndicator.textContent = "Page " + state.page;
 	var totalPages = Math.ceil(state.totalCount / state.limit);
@@ -122,6 +121,24 @@ async function loadData() {
 	btnNext.disabled = state.page >= totalPages;
 }
 
+async function removeCourseFromStudents(deletedCourseId) {
+	const cid = String(deletedCourseId);
+
+	const res = await getList("students", "");
+	const students = res.data || [];
+
+	for (let i = 0; i < students.length; i++) {
+		const s = students[i];
+		const list = Array.isArray(s.courseList) ? s.courseList.map(String) : [];
+
+		if (list.includes(cid)) {
+			const newList = list.filter(function (x) {
+				return String(x) !== cid;
+			});
+			await update("students", String(s.id), { ...s, courseList: newList });
+		}
+	}
+}
 
 if (formWrap) {
 	formWrap.addEventListener("submit", async function (e) {
@@ -138,36 +155,44 @@ if (formWrap) {
 		if (error) return alert(error);
 
 		if (state.editingId === null) {
-
 			const result = await getList("courses", "");
-			const lastCourse = result.data[result.data.length - 1];
-			const nextId = lastCourse ? Number(lastCourse.id) + 1 : 1;
+			const all = result.data || [];
+
+			let maxId = 0;
+			for (let i = 0; i < all.length; i++) {
+				const n = Number(all[i].id);
+				if (!isNaN(n) && n > maxId) maxId = n;
+			}
+
 			const newCourse = {
-				id: nextId,
+				id: String(maxId + 1),
 				...course.toJSON()
 			};
+
 			await create("courses", newCourse);
 		} else {
-			await update("courses", state.editingId, course.toJSON());
+			await update("courses", String(state.editingId), course.toJSON());
 			state.editingId = null;
 		}
+
 		dataForm.reset();
+		formWrap.style.display = "none";
 		loadData();
 	});
 }
-
-
 
 if (tableBody) {
 	tableBody.addEventListener("click", async function (e) {
 		const btn = e.target;
 		const id = btn.dataset.id;
 		if (!id) return;
-		formWrap.style.display = "grid"
+
+		formWrap.style.display = "grid";
+
 		if (btn.classList.contains("edit-btn")) {
 			const c = await getById("courses", id);
 
-			state.editingId = Number(id);
+			state.editingId = String(id);
 			fieldTitle.value = c.title ?? "";
 			fieldHours.value = c.hours ?? "";
 			fieldDept.value = c.department ?? "";
@@ -175,10 +200,12 @@ if (tableBody) {
 		}
 
 		if (btn.classList.contains("delete-btn")) {
-			const ok = confirm("Delete this course?");
+			const ok = confirm("Delete this course? This will also remove it from students courseList.");
 			if (!ok) return;
 
 			await remove("courses", id);
+
+			await removeCourseFromStudents(id);
 
 			if (state.page > 1 && (state.totalCount - 1) <= (state.page - 1) * state.limit) {
 				state.page--;
@@ -188,5 +215,4 @@ if (tableBody) {
 		}
 	});
 }
-
 loadData();

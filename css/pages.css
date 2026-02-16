@@ -12,8 +12,7 @@ body {
 }
 
 .container {
-  width: 90%;
-  max-width: 1100px;
+  width: 85%;
   margin: 30px auto;
   background: #fff;
   border-radius: 10px;
@@ -383,3 +382,48 @@ tbody tr:hover {
 #fieldGender option {
   font-weight: 600;
 }
+
+.course-selects {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 14px 18px;
+  margin-top: 10px;
+}
+
+.course-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.course-field label {
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #444;
+}
+
+.course-field select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+  cursor: pointer;
+  transition: 0.25s;
+  outline: none;
+}
+
+.course-field select:hover {
+  border-color: #007bff;
+}
+
+.course-field select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.course-field select option:disabled {
+  color: #999;
+}
+
