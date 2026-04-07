@@ -17,11 +17,3 @@ The Student Management System is a frontend web application designed to manage a
 - CSS3 
 - DB JSON mock server  
 
-## Project Structure
-/css
-/js
-  /models
-  /api
-  /ui
-/html
-/db.json
